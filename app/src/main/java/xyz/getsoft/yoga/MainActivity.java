@@ -10,12 +10,14 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -23,6 +25,8 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
 
     TextView asanNameTV;
+    TextView asanCountTV;
+    ImageView currentStateImageIV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         asanNameTV = (TextView)findViewById(R.id.asanName);
+        asanCountTV = (TextView)findViewById(R.id.asanCount);
+        currentStateImageIV = (ImageView) findViewById(R.id.currentStateImage);
 
 
         String AsanNames[] = {"শবাসন", "উজ্জীবনাসন" , "অর্ধচন্দ্রাসন" ,"ভদ্রাসন", "গোমুখাসন", "জানুশিরাসন", "পবন মুক্তাসন", "শবাসন"};
@@ -42,10 +48,33 @@ public class MainActivity extends AppCompatActivity {
                 {20,20,20,20,20,20,30},
                 {10,5,10},
                 {30},
-                {30,10,30},
-                {15,10,15},
-                {15,5,15,5,15},
+                {30,30},
+                {15,15},
+                {15,15,15},
                 {5*60}
+        };
+
+//        final int AsanStepTimes[][] = {
+//                {3},
+//                {2,2,2,2,2,2,3},
+//                {2,2,2},
+//                {3},
+//                {3,3},
+//                {2,2},
+//                {2,2,2},
+//                {5}
+//        };
+
+        final String asanImages[][] = {
+                {"shobasan"},
+                {"ujjibon_back_bend", "ujjibon_front_bend", "ujjibon_parallel_to_ground", "ujjibon_lying_bend",
+                        "ujjibon_flat_lying", "ujjibon_lying_bend", "ujjibon_front_bend"},
+                {"ordho_bam", "ordho_straight", "ordho_dan"},
+                {"vodrasan"},
+                {"gomukh_dan", "gomukh_bam"},
+                {"janu_bam", "janu_dan"},
+                {"pobon_bam", "pobon_dan", "pobon_both"},
+                {"shobasan"}
         };
 
         int asanInterval = 10;
@@ -59,10 +88,17 @@ public class MainActivity extends AppCompatActivity {
             Log.d("asan", "\n-----------------"+asan+"---------------\n");
             for (int f=0; f < asanFrequency[asanIndex]; f++ ){
                 Log.d("frequency", "FREQUENCY : "+f);
+                final int[] j = {-1};
                 for (final int duration : AsanStepTimes[asanIndex]){
                     nextNotifyTime+= duration;
+//                    try {
+//                        Log.d("asanImgIndex", asanImages[asanIndex][j++] +asanIndex+""+(j-1));
+//                    }catch (ArrayIndexOutOfBoundsException e){
+//                        Log.d("indexError", asanIndex+""+j);
+//                    }
                     final Handler handler = new Handler();
                     final int finalF = f;
+                    final int finalAsanIndex = asanIndex;
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -74,6 +110,10 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("duration", asan+"("+ (finalF+1) +") > "+hour+" : "+minute+" : "+sec);
                             makeNotification(asan+", "+ (finalF+1),  hour+" : "+minute+" : "+sec);
                             asanNameTV.setText(asan);
+                            asanCountTV.setText( (finalF+1)+"" );
+                            //currentStateImageIV.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ujjibon_back_bend));
+                            currentStateImageIV.setImageResource(getResources().
+                                    getIdentifier(asanImages[finalAsanIndex][++j[0]], "drawable", getPackageName()));
                         }
 
                     }, nextNotifyTime*1000);
@@ -83,14 +123,14 @@ public class MainActivity extends AppCompatActivity {
             ++asanIndex;
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
     }
 
     @Override

@@ -14,9 +14,26 @@
         android:id="@+id/asanName"
         android:text="শবাসন"
         android:gravity="center"
-        android:textColor="#debc7723"
+        android:textColor="#dedc8823"
         android:paddingTop="5sp"
+        android:textSize="35sp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/asanCount"
+        android:text="1"
+        android:gravity="center"
+        android:textColor="#de117624"
+        android:paddingTop="45sp"
         android:textSize="25sp"
+        />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/currentStateImage"
+        android:src="@drawable/shobasan"
+        android:paddingTop="80sp"
         />
 
 </android.support.constraint.ConstraintLayout>
