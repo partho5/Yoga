@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
 
         asanNameTV = (TextView)findViewById(R.id.asanName);
         asanCountTV = (TextView)findViewById(R.id.asanCount);
@@ -43,18 +46,22 @@ public class MainActivity extends AppCompatActivity {
 
         String AsanNames[] = {"শবাসন", "উজ্জীবনাসন" , "অর্ধচন্দ্রাসন" ,"ভদ্রাসন", "গোমুখাসন", "জানুশিরাসন", "পবন মুক্তাসন", "শবাসন"};
 
+
         int AsanStepTimes[][] = {
-                {3*5},
+                {3*60},
                 {20,20,20,20,20,20,30},
-                {10,5,10},
+                {20,10,20},
                 {30},
                 {30,30},
-                {15,15},
-                {15,15,15},
+                {30,30},
+                {20,20,20},
                 {5*60}
         };
+        int endShabasanTime = 5*60;
 
-//        final int AsanStepTimes[][] = {
+
+
+//        int AsanStepTimes[][] = {
 //                {3},
 //                {2,2,2,2,2,2,3},
 //                {2,2,2},
@@ -64,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
 //                {2,2,2},
 //                {5}
 //        };
+//        int endShabasanTime = 5;
 
         final String asanImages[][] = {
                 {"shobasan"},
@@ -78,24 +86,17 @@ public class MainActivity extends AppCompatActivity {
         };
 
         int asanInterval = 10;
-        int asanFrequency[] = {1,2,2,1,3,3,3,1};
+        final int asanFrequency[] = {1,2,2,1,3,3,3,1};
 
 
         int asanIndex = 0;
         int nextNotifyTime = 0;
 
         for(final String asan: AsanNames){
-            Log.d("asan", "\n-----------------"+asan+"---------------\n");
             for (int f=0; f < asanFrequency[asanIndex]; f++ ){
                 Log.d("frequency", "FREQUENCY : "+f);
                 final int[] j = {-1};
                 for (final int duration : AsanStepTimes[asanIndex]){
-                    nextNotifyTime+= duration;
-//                    try {
-//                        Log.d("asanImgIndex", asanImages[asanIndex][j++] +asanIndex+""+(j-1));
-//                    }catch (ArrayIndexOutOfBoundsException e){
-//                        Log.d("indexError", asanIndex+""+j);
-//                    }
                     final Handler handler = new Handler();
                     final int finalF = f;
                     final int finalAsanIndex = asanIndex;
@@ -110,17 +111,28 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("duration", asan+"("+ (finalF+1) +") > "+hour+" : "+minute+" : "+sec);
                             makeNotification(asan+", "+ (finalF+1),  hour+" : "+minute+" : "+sec);
                             asanNameTV.setText(asan);
-                            asanCountTV.setText( (finalF+1)+"" );
-                            //currentStateImageIV.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ujjibon_back_bend));
+                            asanCountTV.setText( (finalF+1)+" / "+asanFrequency[finalAsanIndex] );
                             currentStateImageIV.setImageResource(getResources().
                                     getIdentifier(asanImages[finalAsanIndex][++j[0]], "drawable", getPackageName()));
                         }
 
                     }, nextNotifyTime*1000);
-
+                    nextNotifyTime+= duration+asanInterval;
                 }
             }
             ++asanIndex;
+
+            if(asanIndex == asanFrequency.length-1){
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        makeNotification("Completed", "for today");
+                        asanNameTV.setText("Completed");
+                        asanCountTV.setText("");
+                    }
+                }, nextNotifyTime*1000+(endShabasanTime*1000));
+            }
         }
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
