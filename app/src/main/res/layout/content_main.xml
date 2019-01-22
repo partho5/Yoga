@@ -28,12 +28,32 @@
         android:paddingTop="45sp"
         android:textSize="25sp"
         />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/timer"
+        android:text="."
+        android:gravity="center"
+        android:textColor="#808080"
+        android:paddingTop="80sp"
+        android:textSize="15sp"
+        />
+    <ProgressBar
+        android:id="@+id/pb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="90sp"
+        style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"
+        android:progressBackgroundTint="#d2cfcf"
+        />
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/currentStateImage"
         android:src="@drawable/shobasan"
-        android:paddingTop="80sp"
+        android:paddingTop="120sp"
         />
 
 </android.support.constraint.ConstraintLayout>
